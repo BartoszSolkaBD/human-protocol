@@ -42,7 +42,7 @@ class PlainLabelInfo(LabelInfoBase):
 class SkeletonLabelInfo(LabelInfoBase):
     type: Literal[LabelTypes.skeleton]
 
-    nodes: List[str] = Field(min_items=1)
+    nodes: List[str] = Field(min_length=1)
     """
     A list of node label names (only points are supposed to be nodes).
     Example:
@@ -95,7 +95,7 @@ LabelInfo = Annotated[Union[PlainLabelInfo, SkeletonLabelInfo], Field(discrimina
 class AnnotationInfo(BaseModel):
     type: TaskType
 
-    labels: list[LabelInfo] = Field(min_items=1)
+    labels: list[LabelInfo] = Field(min_length=1)
     "Label declarations with accepted annotation types"
 
     description: str = ""
