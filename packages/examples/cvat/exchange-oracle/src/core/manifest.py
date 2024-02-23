@@ -2,7 +2,7 @@ from decimal import Decimal
 from enum import Enum
 from typing import Annotated, Any, List, Literal, Optional, Tuple, Union
 
-from pydantic import AnyUrl, BaseModel, Field, root_validator
+from pydantic import AnyUrl, BaseModel, Field, model_validator
 
 from src.core.config import Config
 from src.core.types import TaskType
@@ -54,7 +54,7 @@ class SkeletonLabelInfo(LabelInfoBase):
     joints: List[Tuple[int, int]]
     "A list of node adjacency, e.g. [[0, 1], [1, 2], [1, 3]]"
 
-    @root_validator
+    @model_validator(mode="before")
     @classmethod
     def validate_type(cls, values: dict) -> dict:
         if values["type"] != LabelTypes.skeleton:

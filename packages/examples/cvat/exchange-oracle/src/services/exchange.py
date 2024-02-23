@@ -41,7 +41,7 @@ def serialize_task(
             escrow_address=project.escrow_address,
             title=f"Task {project.escrow_address[:10]}",
             description=manifest.annotation.description,
-            job_bounty=manifest.job_bounty,
+            job_bounty=str(manifest.job_bounty),
             job_time_limit=manifest.annotation.max_time,
             job_size=manifest.annotation.job_size + manifest.validation.val_size,
             job_type=project.job_type,

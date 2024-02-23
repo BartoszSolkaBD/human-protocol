@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from fastapi import HTTPException
 from pydantic import ValidationError
+from pydantic_core import Url
 
 import src.services.cvat as cvat_service
 from src.core.types import AssignmentStatus, PlatformType, ProjectStatuses
@@ -103,7 +104,7 @@ class ServiceIntegrationTest(unittest.TestCase):
         self.assertEqual(data.platform, PlatformType.CVAT)
         self.assertEqual(data.status, cvat_project.status)
         self.assertIsNotNone(data.assignment)
-        self.assertIsInstance(data.assignment.assignment_url, str)
+        self.assertIsInstance(data.assignment.assignment_url, Url)
         self.assertEqual(data.assignment.started_at, assignment.created_at)
         self.assertEqual(data.assignment.finishes_at, assignment.expires_at)
         self.assertIsInstance(data, service_api.TaskResponse)

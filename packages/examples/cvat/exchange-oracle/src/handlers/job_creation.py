@@ -212,9 +212,9 @@ class BoxesFromPointsTaskBuilder:
         return self
 
     def _download_input_data(self):
-        data_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
-        gt_bucket = BucketAccessInfo.from_raw_url(self.manifest.validation.gt_url)
-        points_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.points_url)
+        data_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
+        gt_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.validation.gt_url))
+        points_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.points_url))
 
         data_storage_client = self._make_cloud_storage_client(data_bucket)
         gt_storage_client = self._make_cloud_storage_client(gt_bucket)
@@ -886,7 +886,7 @@ class BoxesFromPointsTaskBuilder:
         assert self._data_filenames is not _unset
         assert self._roi_filenames is not _unset
 
-        src_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
+        src_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
         src_prefix = ""
         dst_bucket = self.oracle_data_bucket
 
@@ -950,7 +950,7 @@ class BoxesFromPointsTaskBuilder:
         assert self._job_layout is not _unset
         assert self._label_configuration is not _unset
 
-        input_data_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
+        input_data_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
         oracle_bucket = self.oracle_data_bucket
 
         # Register cloud storage on CVAT to pass user dataset
@@ -972,7 +972,7 @@ class BoxesFromPointsTaskBuilder:
         # Setup webhooks for a project (update:task, update:job)
         webhook = cvat_api.create_cvat_webhook(project.id)
 
-        input_data_bucket = parse_bucket_url(self.manifest.data.data_url)
+        input_data_bucket = parse_bucket_url(str(self.manifest.data.data_url))
         with SessionLocal.begin() as session:
             db_service.create_project(
                 session,
@@ -1127,9 +1127,9 @@ class SkeletonsFromBoxesTaskBuilder:
         return self
 
     def _download_input_data(self):
-        data_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
-        gt_bucket = BucketAccessInfo.from_raw_url(self.manifest.validation.gt_url)
-        boxes_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.boxes_url)
+        data_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
+        gt_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.validation.gt_url))
+        boxes_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.boxes_url))
 
         data_storage_client = self._make_cloud_storage_client(data_bucket)
         gt_storage_client = self._make_cloud_storage_client(gt_bucket)
@@ -1787,7 +1787,7 @@ class SkeletonsFromBoxesTaskBuilder:
         assert self._roi_filenames is not _unset
         assert self._roi_infos is not _unset
 
-        src_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
+        src_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
         src_prefix = ""
         dst_bucket = self.oracle_data_bucket
 
@@ -1874,7 +1874,7 @@ class SkeletonsFromBoxesTaskBuilder:
             for skeleton_label_id, skeleton_label in enumerate(self.manifest.annotation.labels)
         }
 
-        input_data_bucket = BucketAccessInfo.from_raw_url(self.manifest.data.data_url)
+        input_data_bucket = BucketAccessInfo.from_raw_url(str(self.manifest.data.data_url))
         oracle_bucket = self.oracle_data_bucket
 
         # Register cloud storage on CVAT to pass user dataset
@@ -2074,8 +2074,8 @@ def create_task(escrow_address: str, chain_id: int) -> None:
         TaskType.image_points,
         TaskType.image_label_binary,
     ]:
-        data_bucket = parse_bucket_url(manifest.data.data_url)
-        gt_bucket = parse_bucket_url(manifest.validation.gt_url)
+        data_bucket = parse_bucket_url(str(manifest.data.data_url))
+        gt_bucket = parse_bucket_url(str(manifest.validation.gt_url))
 
         data_bucket_client = cloud_service.make_client(data_bucket)
         gt_bucket_client = cloud_service.make_client(gt_bucket)
