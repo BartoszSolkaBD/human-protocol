@@ -2,6 +2,7 @@ import logging
 
 import httpx
 from human_protocol_sdk.constants import Status as EscrowStatus
+from sqlalchemy.orm import Session
 
 import src.handlers.job_creation as cvat
 import src.services.cvat as cvat_db_service
@@ -9,8 +10,8 @@ import src.services.webhook as oracle_db_service
 from src.chain.escrow import validate_escrow
 from src.chain.kvstore import get_job_launcher_url
 from src.core.config import Config, CronConfig
-from src.core.oracle_events import ExchangeOracleEvent_TaskCreationFailed
-from src.core.types import JobLauncherEventType, OracleWebhookTypes, ProjectStatuses
+from src.core.oracle_events import ExchangeOracleEvent_JobCreationFailed
+from src.core.types import JobLauncherEventTypes, OracleWebhookTypes, ProjectStatuses
 from src.db import SessionLocal
 from src.db.utils import ForUpdateParams
 from src.log import ROOT_LOGGER_NAME
@@ -61,13 +62,11 @@ def process_incoming_job_launcher_webhooks():
         logger.debug("Finishing cron job")
 
 
-def handle_job_launcher_event(
-    webhook: Webhook, *, db_session: SessionLocal, logger: logging.Logger
-):
+def handle_job_launcher_event(webhook: Webhook, *, db_session: Session, logger: logging.Logger):
     assert webhook.type == OracleWebhookTypes.job_launcher
 
     match webhook.event_type:
-        case JobLauncherEventType.escrow_created:
+        case JobLauncherEventTypes.escrow_created:
             try:
                 validate_escrow(
                     webhook.chain_id,
@@ -104,12 +103,12 @@ def handle_job_launcher_event(
                         escrow_address=webhook.escrow_address,
                         chain_id=webhook.chain_id,
                         type=OracleWebhookTypes.exchange_oracle,
-                        event=ExchangeOracleEvent_TaskCreationFailed(reason=str(ex)),
+                        event=ExchangeOracleEvent_JobCreationFailed(reason=str(ex)),
                     )
 
                 raise
 
-        case JobLauncherEventType.escrow_canceled:
+        case JobLauncherEventTypes.escrow_canceled:
             try:
                 validate_escrow(
                     webhook.chain_id,

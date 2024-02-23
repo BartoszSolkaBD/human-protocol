@@ -12,7 +12,7 @@ from unittest.mock import Mock, patch
 import datumaro as dm
 
 from src.core.types import (
-    ExchangeOracleEventType,
+    ExchangeOracleEventTypes,
     JobStatuses,
     Networks,
     ProjectStatuses,
@@ -140,7 +140,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             .first()
         )
         self.assertIsNotNone(webhook)
-        self.assertEqual(webhook.event_type, ExchangeOracleEventType.task_finished)
+        self.assertEqual(webhook.event_type, ExchangeOracleEventTypes.job_finished)
         db_project = self.session.query(Project).filter_by(id=project_id).first()
 
         self.assertEqual(db_project.status, ProjectStatuses.validation)
@@ -250,7 +250,9 @@ class ServiceIntegrationTest(unittest.TestCase):
             patch("src.handlers.completed_escrows.get_escrow_manifest") as mock_get_manifest,
             patch("src.handlers.completed_escrows.validate_escrow"),
             patch("src.handlers.completed_escrows.cvat_api"),
-            patch("src.handlers.completed_escrows.cvat_api.get_job_annotations") as mock_annotations,
+            patch(
+                "src.handlers.completed_escrows.cvat_api.get_job_annotations"
+            ) as mock_annotations,
             patch("src.handlers.completed_escrows.cloud_client.S3Client") as mock_S3Client,
         ):
             manifest = json.load(data)

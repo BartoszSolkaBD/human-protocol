@@ -11,7 +11,7 @@ from src.core.types import (
     Networks,
     OracleWebhookStatuses,
     OracleWebhookTypes,
-    RecordingOracleEventType,
+    RecordingOracleEventTypes,
 )
 from src.crons.process_reputation_oracle_webhooks import process_outgoing_reputation_oracle_webhooks
 from src.db import SessionLocal
@@ -47,7 +47,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.reputation_oracle.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=RecordingOracleEventType.task_completed,
+            event_type=RecordingOracleEventTypes.job_completed,
             event_data=event_data,
         )
 
@@ -91,7 +91,7 @@ class ServiceIntegrationTest(unittest.TestCase):
                 json={
                     "escrowAddress": escrow_address,
                     "chainId": chain_id,
-                    "eventType": RecordingOracleEventType.task_completed.value,
+                    "eventType": RecordingOracleEventTypes.job_completed.value,
                 },
             )
             self.assertEqual(updated_webhook.status, OracleWebhookStatuses.completed.value)

@@ -7,8 +7,8 @@ from human_protocol_sdk.constants import ChainId, Status
 from sqlalchemy.sql import select
 
 from src.core.types import (
-    ExchangeOracleEventType,
-    JobLauncherEventType,
+    ExchangeOracleEventTypes,
+    JobLauncherEventTypes,
     JobStatuses,
     Networks,
     OracleWebhookStatuses,
@@ -48,7 +48,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_created.value,
+            event_type=JobLauncherEventTypes.escrow_created.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -109,7 +109,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_created.value,
+            event_type=JobLauncherEventTypes.escrow_created.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -140,7 +140,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_created.value,
+            event_type=JobLauncherEventTypes.escrow_created.value,
             direction=OracleWebhookDirectionTag.incoming,
             attempts=5,
         )
@@ -185,7 +185,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_created.value,
+            event_type=JobLauncherEventTypes.escrow_created.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -252,7 +252,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_canceled.value,
+            event_type=JobLauncherEventTypes.escrow_canceled.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -304,7 +304,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_canceled.value,
+            event_type=JobLauncherEventTypes.escrow_canceled.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -355,7 +355,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_canceled.value,
+            event_type=JobLauncherEventTypes.escrow_canceled.value,
             direction=OracleWebhookDirectionTag.incoming,
         )
 
@@ -394,7 +394,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=ExchangeOracleEventType.task_finished.value,
+            event_type=ExchangeOracleEventTypes.job_finished.value,
             direction=OracleWebhookDirectionTag.outgoing,
         )
 
@@ -436,7 +436,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=chain_id,
             type=OracleWebhookTypes.job_launcher.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=JobLauncherEventType.escrow_created.value,
+            event_type=JobLauncherEventTypes.escrow_created.value,
             direction=OracleWebhookDirectionTag.outgoing,
         )
 

@@ -2,11 +2,11 @@ from typing import Optional, Type, Union
 
 from pydantic import BaseModel
 
-from src.core.types import ExchangeOracleEventType, OracleWebhookTypes, RecordingOracleEventType
+from src.core.types import ExchangeOracleEventTypes, OracleWebhookTypes, RecordingOracleEventTypes
 
 EventTypeTag = Union[
-    ExchangeOracleEventType,
-    RecordingOracleEventType,
+    ExchangeOracleEventTypes,
+    RecordingOracleEventTypes,
 ]
 
 
@@ -24,29 +24,33 @@ class JobLauncherEvent_EscrowCanceled(OracleEvent):
     pass  # escrow is enough
 
 
-class RecordingOracleEvent_TaskCompleted(OracleEvent):
+class RecordingOracleEvent_JobCompleted(OracleEvent):
     pass  # escrow is enough for now
 
 
-class RecordingOracleEvent_TaskRejected(OracleEvent):
+class RecordingOracleEvent_SubmissionRejected(OracleEvent):
+    class RejectedTaskInfo(BaseModel):
+        task_id: str
+        reason: str
+
     # no task_id, escrow is enough for now
-    rejected_job_ids: list[int]
+    rejected_tasks: list[RejectedTaskInfo]
 
 
-class ExchangeOracleEvent_TaskCreationFailed(OracleEvent):
+class ExchangeOracleEvent_JobCreationFailed(OracleEvent):
     # no task_id, escrow is enough for now
     reason: str
 
 
-class ExchangeOracleEvent_TaskFinished(OracleEvent):
+class ExchangeOracleEvent_JobFinished(OracleEvent):
     pass  # escrow is enough for now
 
 
 _event_type_map = {
-    RecordingOracleEventType.task_completed: RecordingOracleEvent_TaskCompleted,
-    RecordingOracleEventType.task_rejected: RecordingOracleEvent_TaskRejected,
-    ExchangeOracleEventType.task_creation_failed: ExchangeOracleEvent_TaskCreationFailed,
-    ExchangeOracleEventType.task_finished: ExchangeOracleEvent_TaskFinished,
+    RecordingOracleEventTypes.job_completed: RecordingOracleEvent_JobCompleted,
+    RecordingOracleEventTypes.submission_rejected: RecordingOracleEvent_SubmissionRejected,
+    ExchangeOracleEventTypes.job_creation_failed: ExchangeOracleEvent_JobCreationFailed,
+    ExchangeOracleEventTypes.job_finished: ExchangeOracleEvent_JobFinished,
 }
 
 
@@ -72,8 +76,8 @@ def parse_event(
     sender: OracleWebhookTypes, event_type: str, event_data: Optional[dict] = None
 ) -> OracleEvent:
     sender_events_mapping = {
-        OracleWebhookTypes.recording_oracle: RecordingOracleEventType,
-        OracleWebhookTypes.exchange_oracle: ExchangeOracleEventType,
+        OracleWebhookTypes.recording_oracle: RecordingOracleEventTypes,
+        OracleWebhookTypes.exchange_oracle: ExchangeOracleEventTypes,
     }
 
     sender_events = sender_events_mapping.get(sender)

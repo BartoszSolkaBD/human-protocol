@@ -11,7 +11,7 @@ from web3.providers.rpc import HTTPProvider
 
 from src.core.config import StorageConfig
 from src.core.types import (
-    ExchangeOracleEventType,
+    ExchangeOracleEventTypes,
     Networks,
     OracleWebhookStatuses,
     OracleWebhookTypes,
@@ -53,7 +53,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             chain_id=Networks.localhost.value,
             type=OracleWebhookTypes.exchange_oracle.value,
             status=OracleWebhookStatuses.pending.value,
-            event_type=ExchangeOracleEventType.task_finished.value,
+            event_type=ExchangeOracleEventTypes.job_finished.value,
         )
 
     def test_process_exchange_oracle_webhook(self):
