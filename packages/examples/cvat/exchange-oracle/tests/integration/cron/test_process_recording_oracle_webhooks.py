@@ -7,7 +7,7 @@ from human_protocol_sdk.constants import ChainId
 from sqlalchemy.sql import select
 
 from src.core.types import (
-    AssignmentStatus,
+    AssignmentStatuses,
     ExchangeOracleEventTypes,
     JobStatuses,
     Networks,
@@ -15,8 +15,8 @@ from src.core.types import (
     OracleWebhookTypes,
     ProjectStatuses,
     RecordingOracleEventTypes,
-    TaskStatus,
-    TaskType,
+    TaskStatuses,
+    TaskTypes,
 )
 from src.crons.process_recording_oracle_webhooks import (
     process_incoming_recording_oracle_webhooks,
@@ -47,7 +47,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             cvat_id=1,
             cvat_cloudstorage_id=1,
             status=ProjectStatuses.validation.value,
-            job_type=TaskType.image_label_binary.value,
+            job_type=TaskTypes.image_label_binary.value,
             escrow_address=escrow_address,
             chain_id=Networks.localhost.value,
             bucket_url="https://test.storage.googleapis.com/",
@@ -90,7 +90,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             cvat_id=1,
             cvat_cloudstorage_id=1,
             status=ProjectStatuses.completed.value,
-            job_type=TaskType.image_label_binary.value,
+            job_type=TaskTypes.image_label_binary.value,
             escrow_address=escrow_address,
             chain_id=Networks.localhost.value,
             bucket_url="https://test.storage.googleapis.com/",
@@ -134,7 +134,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             cvat_id=cvat_id,
             cvat_cloudstorage_id=1,
             status=ProjectStatuses.validation.value,
-            job_type=TaskType.image_label_binary.value,
+            job_type=TaskTypes.image_label_binary.value,
             escrow_address=escrow_address,
             chain_id=Networks.localhost.value,
             bucket_url="https://test.storage.googleapis.com/",
@@ -145,7 +145,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             id=task_id,
             cvat_id=cvat_id,
             cvat_project_id=cvat_project.cvat_id,
-            status=TaskStatus.completed.value,
+            status=TaskStatuses.completed.value,
         )
         self.session.add(cvat_task)
 
@@ -175,7 +175,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             expires_at=datetime.utcnow() + timedelta(minutes=5),
             user_wallet_address="sample wallet",
             cvat_job_id=cvat_id,
-            status=AssignmentStatus.completed.value,
+            status=AssignmentStatuses.completed.value,
         )
         self.session.add(assignment)
 
@@ -209,7 +209,7 @@ class ServiceIntegrationTest(unittest.TestCase):
 
         db_task = self.session.query(Task).filter_by(id=task_id).first()
 
-        self.assertEqual(db_task.status, TaskStatus.annotation.value)
+        self.assertEqual(db_task.status, TaskStatuses.annotation.value)
 
         db_job = self.session.query(Job).filter_by(id=job_id).first()
 
@@ -217,7 +217,7 @@ class ServiceIntegrationTest(unittest.TestCase):
 
         db_assignment = self.session.query(Assignment).filter_by(id=assignment_id).first()
 
-        self.assertEqual(db_assignment.status, AssignmentStatus.rejected)
+        self.assertEqual(db_assignment.status, AssignmentStatuses.rejected)
 
     def test_process_incoming_recording_oracle_webhooks_submission_rejected_type_invalid_project_status(
         self,
@@ -230,7 +230,7 @@ class ServiceIntegrationTest(unittest.TestCase):
             cvat_id=cvat_id,
             cvat_cloudstorage_id=1,
             status=ProjectStatuses.completed.value,
-            job_type=TaskType.image_label_binary.value,
+            job_type=TaskTypes.image_label_binary.value,
             escrow_address=escrow_address,
             chain_id=Networks.localhost.value,
             bucket_url="https://test.storage.googleapis.com/",

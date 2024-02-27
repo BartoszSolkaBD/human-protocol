@@ -10,7 +10,7 @@ class Networks(int, Enum):
     localhost = Config.localhost.chain_id
 
 
-class TaskType(str, Enum, metaclass=BetterEnumMeta):
+class TaskTypes(str, Enum, metaclass=BetterEnumMeta):
     image_label_binary = "IMAGE_LABEL_BINARY"
     image_points = "IMAGE_POINTS"
     image_boxes = "IMAGE_BOXES"
@@ -30,11 +30,11 @@ class OracleWebhookStatuses(str, Enum):
     failed = "failed"
 
 
-class ExchangeOracleEventType(str, Enum, metaclass=BetterEnumMeta):
+class ExchangeOracleEventTypes(str, Enum, metaclass=BetterEnumMeta):
     job_creation_failed = "job_creation_failed"
     job_finished = "job_finished"
 
 
-class RecordingOracleEventType(str, Enum, metaclass=BetterEnumMeta):
+class RecordingOracleEventTypes(str, Enum, metaclass=BetterEnumMeta):
     job_completed = "job_completed"
     submission_rejected = "submission_rejected"

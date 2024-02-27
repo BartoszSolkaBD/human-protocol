@@ -5,7 +5,7 @@ from typing import Annotated, Any, List, Literal, Optional, Tuple, Union
 from pydantic import AnyUrl, BaseModel, Field, model_validator
 
 from src.core.config import Config
-from src.core.types import TaskType
+from src.core.types import TaskTypes
 from src.utils.enums import BetterEnumMeta
 
 
@@ -93,7 +93,7 @@ LabelInfo = Annotated[Union[PlainLabelInfo, SkeletonLabelInfo], Field(discrimina
 
 
 class AnnotationInfo(BaseModel):
-    type: TaskType
+    type: TaskTypes
 
     labels: list[LabelInfo] = Field(min_length=1)
     "Label declarations with accepted annotation types"

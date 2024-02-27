@@ -24,7 +24,7 @@ class ProjectStatuses(str, Enum, metaclass=BetterEnumMeta):
     recorded = "recorded"
 
 
-class TaskStatus(str, Enum, metaclass=BetterEnumMeta):
+class TaskStatuses(str, Enum, metaclass=BetterEnumMeta):
     annotation = "annotation"
     completed = "completed"
 
@@ -36,7 +36,7 @@ class JobStatuses(str, Enum, metaclass=BetterEnumMeta):
     completed = "completed"
 
 
-class TaskType(str, Enum, metaclass=BetterEnumMeta):
+class TaskTypes(str, Enum, metaclass=BetterEnumMeta):
     image_label_binary = "IMAGE_LABEL_BINARY"
     image_points = "IMAGE_POINTS"
     image_boxes = "IMAGE_BOXES"
@@ -77,11 +77,7 @@ class OracleWebhookStatuses(str, Enum, metaclass=BetterEnumMeta):
     failed = "failed"
 
 
-class PlatformType(str, Enum, metaclass=BetterEnumMeta):
-    CVAT = "cvat"
-
-
-class AssignmentStatus(str, Enum, metaclass=BetterEnumMeta):
+class AssignmentStatuses(str, Enum, metaclass=BetterEnumMeta):
     """
     State changes:
 

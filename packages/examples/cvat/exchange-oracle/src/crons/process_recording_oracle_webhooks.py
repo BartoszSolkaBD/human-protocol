@@ -10,12 +10,11 @@ from src.chain.kvstore import get_recording_oracle_url
 from src.core.config import CronConfig
 from src.core.oracle_events import RecordingOracleEvent_SubmissionRejected
 from src.core.types import (
-    AssignmentStatus,
     JobStatuses,
     OracleWebhookTypes,
     ProjectStatuses,
     RecordingOracleEventTypes,
-    TaskStatus,
+    TaskStatuses,
 )
 from src.db import SessionLocal
 from src.db.utils import ForUpdateParams
@@ -149,7 +148,7 @@ def handle_recording_oracle_event(webhook: Webhook, *, db_session: Session, logg
 
                     for task_id in tasks_to_update:
                         cvat_db_service.update_task_status(
-                            db_session, task_id, TaskStatus.annotation
+                            db_session, task_id, TaskStatuses.annotation
                         )
 
                     cvat_db_service.update_project_status(
