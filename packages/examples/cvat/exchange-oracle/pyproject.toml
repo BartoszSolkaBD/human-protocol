@@ -24,6 +24,8 @@ xmltodict = "^0.13.0"
 datumaro = {git = "https://github.com/cvat-ai/datumaro.git", rev = "ff83c00c2c1bc4b8fdfcc55067fcab0a9b5b6b11"}
 boto3 = "^1.28.33"
 pydantic = "^2.6.1"
+fastapi-pagination = "^0.12.17"
+fastapi-filter = "^1.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
