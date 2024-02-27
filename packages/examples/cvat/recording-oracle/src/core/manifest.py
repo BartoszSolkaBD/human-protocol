@@ -2,7 +2,7 @@ from decimal import Decimal
 from enum import Enum
 from typing import Annotated, Any, List, Literal, Optional, Tuple, Union
 
-from pydantic import AnyUrl, BaseModel, Field, root_validator
+from pydantic import AnyUrl, BaseModel, Field, model_validator
 
 from src.core.config import Config
 from src.core.types import TaskTypes
@@ -42,7 +42,7 @@ class PlainLabelInfo(LabelInfoBase):
 class SkeletonLabelInfo(LabelInfoBase):
     type: Literal[LabelTypes.skeleton]
 
-    nodes: List[str] = Field(min_items=1)
+    nodes: List[str] = Field(min_length=1)
     """
     A list of node label names (only points are supposed to be nodes).
     Example:
@@ -54,7 +54,7 @@ class SkeletonLabelInfo(LabelInfoBase):
     joints: List[Tuple[int, int]]
     "A list of node adjacency, e.g. [[0, 1], [1, 2], [1, 3]]"
 
-    @root_validator
+    @model_validator(mode="before")
     @classmethod
     def validate_type(cls, values: dict) -> dict:
         if values["type"] != LabelTypes.skeleton:
@@ -95,7 +95,7 @@ LabelInfo = Annotated[Union[PlainLabelInfo, SkeletonLabelInfo], Field(discrimina
 class AnnotationInfo(BaseModel):
     type: TaskTypes
 
-    labels: list[LabelInfo] = Field(min_items=1)
+    labels: list[LabelInfo] = Field(min_length=1)
     "Label declarations with accepted annotation types"
 
     description: str = ""
