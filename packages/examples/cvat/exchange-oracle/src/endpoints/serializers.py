@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 import src.services.cvat as cvat_service
 from src.chain.escrow import get_escrow_manifest
 from src.core.manifest import TaskManifest
+from src.core.types import AssignmentStatuses, ProjectStatuses
 from src.db import SessionLocal
 from src.schemas import exchange as service_api
 from src.utils.assignments import compose_assignment_url, parse_manifest
@@ -35,15 +36,12 @@ def serialize_job(
                 )
 
         return service_api.JobResponse(
-            id=project.id,
             escrow_address=project.escrow_address,
             chain_id=project.chain_id,
-            title=f"Job {project.escrow_address[:10]}",
-            description=manifest.annotation.description if manifest else None,
-            bounty=str(manifest.job_bounty) if manifest else None,
-            size=manifest.annotation.job_size + manifest.validation.val_size if manifest else None,
             job_type=project.job_type,
-            status=project.status,
+            job_title=f"Job {project.escrow_address[:10]}",
+            job_description=manifest.annotation.description if manifest else None,
+            reward_amount=str(manifest.job_bounty) if manifest else None,
         )
 
 
@@ -77,24 +75,46 @@ def serialize_assignment(
                     get_escrow_manifest(project.chain_id, project.escrow_address)
                 )
 
+        assignment_status_mapping = {
+            AssignmentStatuses.created: service_api.AssignmentStatuses.active,
+            AssignmentStatuses.completed: service_api.AssignmentStatuses.completed,
+            AssignmentStatuses.expired: service_api.AssignmentStatuses.expired,
+            AssignmentStatuses.rejected: service_api.AssignmentStatuses.rejected,
+            AssignmentStatuses.canceled: service_api.AssignmentStatuses.canceled,
+        }
+        if assignment.status == AssignmentStatuses.completed and project.status in [
+            ProjectStatuses.validation,
+            ProjectStatuses.completed,
+            ProjectStatuses.annotation,
+        ]:
+            status = service_api.AssignmentStatuses.validation
+        else:
+            status = assignment_status_mapping[assignment.status]
+
+        updated_at = None
+        if assignment.status == AssignmentStatuses.completed:
+            updated_at = assignment.completed_at
+        elif assignment.status in [
+            AssignmentStatuses.expired,
+            AssignmentStatuses.canceled,
+            AssignmentStatuses.rejected,
+        ]:
+            updated_at = assignment.expires_at
+
         return service_api.AssignmentResponse(
-            id=assignment.id,
+            assignment_id=assignment.id,
             escrow_address=project.escrow_address,
             chain_id=project.chain_id,
-            wallet_address=assignment.user_wallet_address,
-            size=manifest.annotation.job_size + manifest.validation.val_size
-            if manifest
-            else None,  # TODO: can be different for different types
             job_type=project.job_type,
-            status=assignment.status,
-            bounty=str(manifest.job_bounty) if manifest else None,
+            status=status,
+            reward_amount=str(manifest.job_bounty) if manifest else None,
             url=compose_assignment_url(
                 task_id=assignment.job.cvat_task_id,
                 job_id=assignment.cvat_job_id,
             )
             if not assignment.is_finished
             else None,
-            started_at=assignment.created_at,
+            created_at=assignment.created_at,
             expires_at=assignment.expires_at,
-            finished_at=assignment.completed_at,
+            updated_at=updated_at,
         )
