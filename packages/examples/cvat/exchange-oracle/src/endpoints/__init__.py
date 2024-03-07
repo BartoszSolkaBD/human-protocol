@@ -5,6 +5,7 @@ from fastapi_pagination import add_pagination
 from src.core.config import Config
 from src.endpoints.cvat import router as cvat_router
 from src.endpoints.exchange import router as service_router
+from src.endpoints.throttling import add_throttling
 from src.endpoints.webhook import router as webhook_router
 from src.schemas import MetaResponse, ResponseError, ValidationErrorResponse
 
@@ -42,6 +43,7 @@ def init_api(app: FastAPI) -> FastAPI:
         500: {"model": ResponseError},
     }
 
+    add_throttling(app)
     add_pagination(app)
 
     app.include_router(greet_router)
