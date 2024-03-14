@@ -39,5 +39,22 @@
       "schedule": "*/10 * * * *"
     }
   ],
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
+  "functions": {
+    "cron/escrow/create": {
+      "maxDuration": 300
+    },
+    "cron/escrow/setup": {
+      "maxDuration": 300
+    },
+    "cron/escrow/fund": {
+      "maxDuration": 300
+    },
+    "cron/escrow/cancel": {
+      "maxDuration": 300
+    },
+    "cron/webhook/process": {
+      "maxDuration": 300
+    }
+  }
 }
